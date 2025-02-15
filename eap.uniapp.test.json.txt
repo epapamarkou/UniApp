@@ -1,0 +1,133 @@
+package com.eap.uniapp;
+
+import com.google.gson.annotations.SerializedName;
+import java.util.List;
+
+public class JavaUniversity {
+    
+    private String name;
+    @SerializedName("state-province") //Gson αντιστοιχίση JSON -> Java
+    private String stateProvince;
+    private String alpha_two_code;
+    private String country;
+    private List<String> web_pages;
+    private List<String> domains;
+    
+    //getters
+    public String getName(){ return name; }
+    public String getStateProvince(){ return stateProvince; }
+    public String getAlphaTwoCode(){ return alpha_two_code; }
+    public String getCountry(){ return country; }
+    public List<String> getWebPages(){ return web_pages; }
+    public List<String> getDomains(){ return domains; }
+    
+    //setters
+    public void setName(String name){ this.name = name; }
+    public void setStateProvince(String stateProvince){ this.stateProvince = stateProvince; }
+    public void setAlphaTwoCode(String alpha_two_code){ this.alpha_two_code = alpha_two_code; }
+    public void setCountry(String country){ this.country = country; }
+    public void setWebPages(List<String> web_pages){ this.web_pages = web_pages; }
+    public void setDomains(List<String> domains){ this.domains = domains; }
+    
+    
+    @Override
+    public String toString(){
+        StringBuilder webPageStr = new StringBuilder();
+        StringBuilder domainStr = new StringBuilder();
+        
+        //create one String for all webpages
+        if(web_pages != null){
+            for(int i=0; i<web_pages.size();i++){
+                webPageStr.append(web_pages.get(i)).append(",");
+            }
+            if(webPageStr.length() > 2)
+                webPageStr.setLength(webPageStr.length() - 1);
+        }else{
+            webPageStr.append("null");
+        }
+        
+        //create one String for all domains
+        if(domains != null){
+            for(int i=0; i<domains.size();i++){
+                domainStr.append(domains.get(i)).append(", ");
+            }
+            if(domainStr.length() > 2)
+                domainStr.setLength(domainStr.length() - 2);
+        }else{
+            domainStr.append("null");
+        }
+        
+        return String.format("""
+                             University name: %s, state-province: %s, alpha-2 code: %s, 
+                             country: %s, webpage: %s, domain: %s""", 
+                getName(), getStateProvince(),getAlphaTwoCode(),
+                getCountry(),webPageStr,domainStr);
+    }
+    
+}
+
+---------------------------------------
+package com.eap.uniapp;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+public class UniApp {
+
+    public static void main(String[] args) {
+        
+        String urlToCall = "http://universities.hipolabs.com/search?name=aristotle";
+        
+        OkHttpClient client=new OkHttpClient();
+        
+        Request request = new Request.Builder().url(urlToCall).build();
+        
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful() && response.body() != null) {
+                String responseString = response.body().string(); //JSON Array to String
+                //System.out.println(responseString);
+                
+                //create a Gson instanse
+                Gson gson = new Gson();
+                
+                //Convert json array with json objects to 
+                //Java arraylist with java objects
+                Type listType = new TypeToken<List<JavaUniversity>>(){}.getType();
+                ArrayList<JavaUniversity> universityList = gson.fromJson(responseString, listType);
+                
+                //print 
+                if(universityList.isEmpty()){
+                    System.out.println("Response was empty.");
+                }else{
+                    for(int i=0;i<universityList.size(); i++){
+                        System.out.println(universityList.get(i).toString());
+                    }
+                }
+            }
+        }
+        catch (IOException e){
+            //e.printStackTrace();
+            e.getMessage();
+        }
+
+        
+        
+        
+    }//end of main
+    
+}
+
+------------------------------------------
+
+
+
+
+
+

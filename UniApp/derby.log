@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Wed Feb 12 21:34:41 EET 2025:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.17.1.0 - (1913217): instance a816c00e-0194-fba8-079a-00000d7c09d0 
+on database directory C:\Users\Ersi\Desktop\UniApp\db\university with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@33909752 
+Loaded from file:/C:/Users/Ersi/.m2/repository/org/apache/derby/derby/10.17.1.0/derby-10.17.1.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=21.0.4+8-LTS-274
+user.dir=C:\Users\Ersi\Desktop\UniApp
+os.name=Windows 10
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''

@@ -1,0 +1,9 @@
+History of changes (detailed)
+
+15-02-2025
+Project creation UniApp, σε Java 21, Netbeans 23, Application Java with Maven.
+Contains entity classes, jpa controller, first look of frames.
+The file eap.uniapp.test.json.txt for json array management
+
+-02-2025
+

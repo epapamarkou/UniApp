@@ -1,4 +1,5 @@
-package eap.uniapp.json;
+package eap.uniapp.model;
+   
 
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
@@ -58,11 +59,14 @@ public class JavaUniversity {
         }
         
         return String.format("""
-                             University name: %s, state-province: %s, alpha-2 code: %s, 
-                             country: %s, webpage: %s, domain: %s""", 
+                             University name: %s, 
+                             state-province: %s, 
+                             alpha-2 code: %s, 
+                             country: %s, 
+                             webpage: %s, 
+                             domain: %s""", 
                 getName(), getStateProvince(),getAlphaTwoCode(),
                 getCountry(),webPageStr,domainStr);
     }
-    
     
 }

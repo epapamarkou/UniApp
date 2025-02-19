@@ -1,154 +1,129 @@
 package eap.uniapp.gui;
 
+import javax.swing.*;
+import java.awt.*;
 
-public class MainFrame extends javax.swing.JFrame {
-
-    /**
-     * Creates new form MainFrame
-     */
-    public MainFrame() {
-        initComponents();
+public class MainFrame extends JFrame{
+    
+    private JPanel mainPanel;
+    private CardLayout cardLayout;
+    
+    //constructor κεντρικού frame
+    public MainFrame(){
+        setTitle("UniApp"); //ορισμός τίτλου εφαρμογής
+        setSize(1000,600); //ορισμός μεγέθους του παραθύρου
+        setLocationRelativeTo(null); //τοποθέτηση frame στο κέντρο της οθόνης
+        setDefaultCloseOperation(EXIT_ON_CLOSE); //κλείσιμο εφαρμογής από το Χ του παραθύρου
+        setLayout(new BorderLayout()); //ορισμός Layout Manager του Frame σε 5 ζώνες N,S,E,W,C
+        
+        //βόρεια ζώνη με logo και κουμπιά
+        
+        //δημιουργία background στη βόρεια ζώνη και καθορισμός αυτής
+        JPanel backgroundPanel = new JPanel();
+        backgroundPanel.setBackground(new Color(0xa9cdd7));
+        backgroundPanel.setPreferredSize(new Dimension(1000,100));
+        backgroundPanel.setLayout(new BorderLayout());
+        
+        //δημιουργία ενός panel για logo και κουμπιά
+        JPanel contentPanel = new JPanel (new BorderLayout()); 
+        contentPanel.setOpaque(false);
+        
+        //δημιουργία αριστερού Panel για το logo
+        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT,25,20));
+        leftPanel.setOpaque(false);
+        
+        //logo UniApp
+        JLabel logo = new JLabel("UniApp");
+        logo.setFont(new Font("Segoe UI",Font.BOLD,32));
+        logo.setBackground(new Color(0xffffff));
+        logo.setForeground(new Color(0x003366));
+        logo.setOpaque(true);
+        logo.setPreferredSize(new Dimension(150,60));
+        logo.setHorizontalAlignment(SwingConstants.CENTER);
+        logo.setVerticalAlignment(SwingConstants.CENTER);
+        leftPanel.add(logo);
+        
+        //δημιουργία δεξιού Panel για τα κουμπιά
+        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT,10,30));
+        rightPanel.setOpaque(false);
+        
+        //δημιουργία κουμπιών
+        //καθορισμός παραμέτρων
+        Font font = new Font("Arial",Font.BOLD,14);
+        Color backgroundColor = new Color(0xffffff); //λευκό
+        Color foregroundColor = new Color(0x003366); //μπλε
+        Color borderColor = new Color(0xffff00); //κιτρινο
+        
+        //δημιουργία κουμπιών με τη μέθοδο createButton
+        JButton buttonSearch = createButton("Universities by Name",new Dimension(180,40),font,backgroundColor,foregroundColor,borderColor);
+        JButton buttonList = createButton("Universities by Country",new Dimension(180,40),font,backgroundColor,foregroundColor,borderColor);
+        JButton buttonStats = createButton("Statistics",new Dimension(100,40),font,backgroundColor,foregroundColor,borderColor);
+        JButton buttonInfo = createButton("Team Info",new Dimension(120,40),font,backgroundColor,foregroundColor,borderColor);
+        JButton buttonExit = createButton("Exit",new Dimension(100,40),font,backgroundColor,foregroundColor,borderColor);
+        
+        //τοποθέτηση των κουμπιών στο rightPanel
+        rightPanel.add(buttonSearch);
+        rightPanel.add(buttonList);
+        rightPanel.add(buttonStats);
+        rightPanel.add(buttonInfo);
+        rightPanel.add(buttonExit);
+        
+        //προσθήκη leftPanel και rightPanel στο contentPanel
+        contentPanel.add(leftPanel,BorderLayout.WEST);
+        contentPanel.add(rightPanel,BorderLayout.EAST);
+        
+        //προσθήκη contentPanel στο backgroundPanel
+        backgroundPanel.add(contentPanel,BorderLayout.CENTER);
+        
+        //προσθήκη του backgroundPanel στο JFrame στη βόρεια ζώνη του BorderLayout
+        add(backgroundPanel, BorderLayout.NORTH);
+        
+        //δημιουργία διαχειριστή διάταξης για εναλλαγή διαφορετικών JPanels στο κέντρο του JFrame
+        cardLayout = new CardLayout(); //επιτρέπει διαφορετικά JPanel στο ίδιο σημείο
+        //δημιουργία JPanel με διάταξη CardLayout
+        mainPanel = new JPanel(cardLayout);
+        //προσθήκη του mainPanel στο JFrame με κατεύθυνση ΚΕΝΤΡΟ
+        add(mainPanel,BorderLayout.CENTER);
+        
+        
+        //ΔΗΜΙΟΥΡΓΙΑ ΔΙΑΦΟΡΕΤΙΚΏΝ JPanels και προσθήκη αυτών στο mainPanel
+        mainPanel.add(new WelcomePanel()); //βγαίνει πρώτο με το που ανοίγει η εφαρμογή
+        mainPanel.add(new SearchPanel(), "search");
+        mainPanel.add(new CountryPanel(), "country");
+        mainPanel.add(new StatisticsPanel(), "stats");
+        mainPanel.add(new InfoPanel(), "info");
+        mainPanel.add(new ViewUniPanel(), "view"); //αυτό θα βγαίνει με επιλογή είτε απ΄το SearchPanel, είτε απ΄το CountryPanel
+        
+        //προσθήκη listeners στα κουμπιά για εναλλαγή των JPanels
+        buttonSearch.addActionListener(e -> cardLayout.show(mainPanel, "search")); 
+        buttonList.addActionListener(e -> cardLayout.show(mainPanel, "country")); 
+        buttonStats.addActionListener(e -> cardLayout.show(mainPanel, "stats"));
+        buttonInfo.addActionListener(e -> cardLayout.show(mainPanel, "info")); 
+        buttonExit.addActionListener(e -> System.exit(0)); //κλείσιμο εφαρμογής από κουμπί Exit
+        
+        setVisible(true);
     }
-
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
-
-        jFrame1 = new javax.swing.JFrame();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jButton5 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-
-        javax.swing.GroupLayout jFrame1Layout = new javax.swing.GroupLayout(jFrame1.getContentPane());
-        jFrame1.getContentPane().setLayout(jFrame1Layout);
-        jFrame1Layout.setHorizontalGroup(
-            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        jFrame1Layout.setVerticalGroup(
-            jFrame1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setBackground(new java.awt.Color(255, 255, 255));
-        setSize(new java.awt.Dimension(0, 0));
-
-        jButton1.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
-        jButton1.setText("Search");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        jButton2.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
-        jButton2.setText("List of Universities");
-
-        jButton3.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
-        jButton3.setText("Statistics");
-
-        jButton4.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
-        jButton4.setText("Info");
-
-        jButton5.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
-        jButton5.setText("Exit");
-
-        jLabel1.setFont(new java.awt.Font("Segoe UI Black", 0, 36)); // NOI18N
-        jLabel1.setText("UniApp");
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addComponent(jLabel1)
-                .addGap(62, 62, 62)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(44, 44, 44)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(45, 45, 45)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(48, 48, 48)
-                .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(46, 46, 46)
-                .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(34, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel1))
-                .addContainerGap(430, Short.MAX_VALUE))
-        );
-
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new MainFrame().setVisible(true);
-            }
-        });
+    
+    
+    //μέθοδος δημιουργίας κουμπιών
+    private JButton createButton(String button_text, Dimension size, Font font, 
+            Color back_color, Color fore_color,Color border_color){
+        
+        JButton button = new JButton(button_text); //ορισμός κειμένου
+        button.setPreferredSize(size); //ορισμός μεγέθους
+        button.setFont(font); //ορισμός γραμματοσειράς
+        button.setBackground(back_color); //ορισμός χρώματος background
+        button.setForeground(fore_color); //ορισμός χρώματος κειμένου του κουμπιού
+        
+        //αφαίρεση εφέ γεμίσματος
+        button.setContentAreaFilled(false);
+        button.setOpaque(true);
+        
+        //περίγραμμα χρώμα και πάχος γραμμής
+        button.setBorder(BorderFactory.createLineBorder(border_color,3));
+        
+        return button;
     }
+    
+} //end MainFrame
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JFrame jFrame1;
-    private javax.swing.JLabel jLabel1;
-    // End of variables declaration//GEN-END:variables
-}

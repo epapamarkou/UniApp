@@ -20,15 +20,25 @@ public class UniversityJpaController implements Serializable {
     //constructor
     public UniversityJpaController(EntityManagerFactory emf) {
         this.emf = emf;
+        System.out.println("Entity Manager Factory created.");
     }
     
     private EntityManagerFactory emf = null;
     
-    //getter of Entity Manager. Tον δημιουργεί εδώ
+    //getter of Entity Manager
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
-
+    /*
+    //μέθοδος κλεισίματος του EntityManagerFactory
+    public void close(){
+        if(emf != null && emf.isOpen()){
+            emf.close();
+            System.out.println("Entity Manager Factory closed.");
+        }
+    }
+    */
+    //
     public void create(University university) throws PreexistingEntityException, Exception {
         EntityManager em = null;
         try {
@@ -47,7 +57,8 @@ public class UniversityJpaController implements Serializable {
             }
         }
     }
-
+    
+    //
     public void edit(University university) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
@@ -70,7 +81,8 @@ public class UniversityJpaController implements Serializable {
             }
         }
     }
-
+    
+    //
     public void destroy(String id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
@@ -91,15 +103,18 @@ public class UniversityJpaController implements Serializable {
             }
         }
     }
-
+    
+    //
     public List<University> findUniversityEntities() {
         return findUniversityEntities(true, -1, -1);
     }
-
+    
+    //
     public List<University> findUniversityEntities(int maxResults, int firstResult) {
         return findUniversityEntities(false, maxResults, firstResult);
     }
-
+    
+    //
     private List<University> findUniversityEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
@@ -115,7 +130,8 @@ public class UniversityJpaController implements Serializable {
             em.close();
         }
     }
-
+    
+    //
     public University findUniversity(String id) {
         EntityManager em = getEntityManager();
         try {
@@ -124,7 +140,8 @@ public class UniversityJpaController implements Serializable {
             em.close();
         }
     }
-
+    
+    //
     public int getUniversityCount() {
         EntityManager em = getEntityManager();
         try {

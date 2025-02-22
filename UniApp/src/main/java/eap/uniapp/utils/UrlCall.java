@@ -5,13 +5,14 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import eap.uniapp.model.JavaUniversity;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import okhttp3.*;
 
 public class UrlCall {
     
-    private static final String urlToCall = "http://universities.hipolabs.com/search?";
-    //private static final String urlToCall = "https://raw.githubusercontent.com/Hipo/university-domains-list/refs/heads/master/world_universities_and_domains.json";
+    private static final String URL_BASE = "http://universities.hipolabs.com/search?";
+    private static final String URL_JSON = "https://raw.githubusercontent.com/Hipo/university-domains-list/refs/heads/master/world_universities_and_domains.json";
     private final OkHttpClient client;
     private final Gson gson;
     
@@ -26,35 +27,42 @@ public class UrlCall {
     //φίλτρο αναζήτησης. Μετατρέπει το JSON array με τα JSON objects, σε λίστα
     //με Java objects
     
-    public List<JavaUniversity> SearchUniversities(String name, String country){
+    public List<JavaUniversity> SearchUniversities(String name, String country, boolean useJsonUrl){
         //δόμηση του url
-        StringBuilder urlBuilder = new StringBuilder();
-        urlBuilder.append(urlToCall);
+        String URL;
         
-        //αν το name ΔΕΝ ΕΙΝΑΙ null και κενή συμβολοσειρά, τότε βάλε στο urlBuilder
-        //name= και ό,τι name ήρθε στη μέθοδο
-        if (name != null && !name.isEmpty()){
-            urlBuilder.append("name=").append(name);
-        }
-        
-        //αν το country ΔΕΝ ΕΙΝΑΙ null και κενή συμβολοσειρά, τότε βάλε στο urlBuilder
-        //country= και ό,τι country ήρθε στη μέθοδο. Επίσης ελέγχει αν έχει μπει ήδη 
-        //κάποιο name για να προσθέσει στο urlBuilder τον χαρακτήρα &
-        if (country != null && !country.isEmpty()){
-            if (urlBuilder.toString().contains("name=")){
-                urlBuilder.append("&");
+        if (useJsonUrl){ //αν μπει εδώ, παίρνει το URL του αρχείου
+            URL = URL_JSON;
+        }else{ //αν μπει εδώ, φτιάχνει το URL με βάση τα δεδομένα που εισήγαγε ο χρήστης
+            //δόμηση του urlBuilder
+            StringBuilder urlBuilder = new StringBuilder();
+            urlBuilder.append(URL_BASE);
+            
+            //αν το name ΔΕΝ ΕΙΝΑΙ null και κενή συμβολοσειρά, τότε βάλε στο urlBuilder
+            //name= και ό,τι name ήρθε στη μέθοδο
+            if (name != null && !name.isEmpty()){
+                urlBuilder.append("name=").append(name);
             }
-            urlBuilder.append("country=").append(country);
+
+            //αν το country ΔΕΝ ΕΙΝΑΙ null και κενή συμβολοσειρά, τότε βάλε στο urlBuilder
+            //country= και ό,τι country ήρθε στη μέθοδο. Επίσης ελέγχει αν έχει μπει ήδη 
+            //κάποιο name για να προσθέσει στο urlBuilder τον χαρακτήρα &
+            if (country != null && !country.isEmpty()){
+                if (urlBuilder.toString().contains("name=")){
+                    urlBuilder.append("&");
+                }
+                urlBuilder.append("country=").append(country);
+            }
+            
+            URL = urlBuilder.toString();
         }
         
-        
-        Request request = new Request.Builder().url(urlBuilder.toString()).build();
+        Request request = new Request.Builder().url(URL).build();
         
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful() && response.body() != null) {
                 
-                String responseString = response.body().string();
-                //String responseString = response.body().string(); //JSON Array to String
+                String responseString = response.body().string();//JSON Array to String
                 
                 //System.out.println(responseString);
                 
@@ -68,8 +76,9 @@ public class UrlCall {
             e.getMessage();
         }
         
-        //επιστροφή κενής αμετάβλητης λίστας
-        return List.of();
+        //επιστροφή κενής μεταβλητή λίστας
+        //return List.of();
+        return new ArrayList<>();
     }
     // end of SearchUniversities method
     

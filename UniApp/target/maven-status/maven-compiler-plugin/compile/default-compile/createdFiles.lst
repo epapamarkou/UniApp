@@ -1,10 +1,10 @@
 eap\uniapp\utils\UrlCall.class
+eap\uniapp\gui\SearchPanel$1.class
 eap\uniapp\gui\ViewUniPanel.class
 eap\uniapp\db\University.class
 eap\uniapp\db\UniversityJpaController.class
 eap\uniapp\model\JavaUniversity.class
 eap\uniapp\UniApp.class
-eap\uniapp\gui\CountryPanel.class
 eap\uniapp\gui\InfoPanel.class
 eap\uniapp\utils\UrlCall$1.class
 eap\uniapp\gui\WelcomePanel.class

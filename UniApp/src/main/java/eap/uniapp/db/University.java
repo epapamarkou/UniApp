@@ -53,14 +53,17 @@ public class University implements Serializable {
     private String description;
     @Column(name = "CONTACT")
     private String contact;
-
+    
+    //constructor 1
     public University() {
     }
-
+    
+    //constructor 2
     public University(String name) {
         this.name = name;
     }
-
+    
+    //constructor 3
     public University(String name, String alphatwocode, String country, String webpages, String domains) {
         this.name = name;
         this.alphatwocode = alphatwocode;

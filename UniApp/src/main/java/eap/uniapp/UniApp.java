@@ -1,15 +1,14 @@
 package eap.uniapp;
 
 import eap.uniapp.gui.MainFrame;
-import eap.uniapp.model.JavaUniversity;
-import eap.uniapp.utils.UrlCall;
+import eap.uniapp.db.UniversityJpaController;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 import javax.swing.SwingUtilities;
 
 
@@ -20,26 +19,31 @@ public class UniApp {
     static EntityManager em;
 
     public static void main(String[] args) {
-        System.out.println("Starting UniApp..."); //μήνυμα στην κονσόλα
+        System.out.println("Starting UniApp...");
         
+        //δημιουργία EntityManagerFactory και EntityManager
+        //emf = Persistence.createEntityManagerFactory("eap_UniApp_jar_1.0-SNAPSHOTPU");
+        //em = emf.createEntityManager();
+        
+        //δημιουργία
+        //UniversityJpaController controller = new UniversityJpaController(emf);
+        
+        //άνοιγμα γραφικού περιβάλλοντος εφαρμογής
         launchGUI();
         
-        System.out.println("UniApp started..."); //μήνυμα στην κονσόλα
-        /*
-        UrlCall a = new UrlCall();
-        List <JavaUniversity> jlist = a.SearchUniversities("open", "");
-        System.out.println("Number of objects are: " + jlist.size());
-        for(int i=0;i<jlist.size();i++){
-            System.out.println((i+1)+ ") " + jlist.get(i) + "\n");
-        }
-        */
-        
+        System.out.println("UniApp started...");
         
     } //end of Main
     
     // μέθοδος εκκίνησης γραφικού περιβάλλοντος στο Event Dispatched Thread
     private static void launchGUI(){
         SwingUtilities.invokeLater(MainFrame::new);
+    }
+    
+    // μέθοδος κλεισίματος εφαρμογής
+    public static void exitApp(){
+        emf.close();
+        System.out.println("Entity Manager Factory closed from UniApp.java.");
     }
     
     // μέθοδος δημιουργίας σύνδεσης στη ΒΔ
@@ -99,9 +103,6 @@ public class UniApp {
         }
         //end try-catch-finally
     }
-    
-    
-    
     
     
 }

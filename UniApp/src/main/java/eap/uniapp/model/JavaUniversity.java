@@ -2,6 +2,9 @@ package eap.uniapp.model;
    
 
 import com.google.gson.annotations.SerializedName;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 public class JavaUniversity {
@@ -14,6 +17,8 @@ public class JavaUniversity {
     private List<String> web_pages;
     private List<String> domains;
     
+    //θα χρησιμοποιηθεί ο default constructor
+    
     //getters
     public String getName(){ return name; }
     public String getStateProvince(){ return stateProvince; }
@@ -21,6 +26,7 @@ public class JavaUniversity {
     public String getCountry(){ return country; }
     public List<String> getWebPages(){ return web_pages; }
     public List<String> getDomains(){ return domains; }
+    
     
     //setters
     public void setName(String name){ this.name = name; }
@@ -31,6 +37,34 @@ public class JavaUniversity {
     public void setDomains(List<String> domains){ this.domains = domains; }
     
     
+    //μέθοδος που επιστρέφει σε λίστα όλες τις χώρες που έχουν πανεπιστήμια ταξινομημένες
+    public static List<String> allCountries(List<JavaUniversity> universities){
+        //έλεγχος αν η λίστα είναι null ή κενή
+        if(universities == null || universities.isEmpty()){
+            //επιστροφή κενής αμετάβλητης λίστας
+            return List.of();
+        }
+        
+        //αρχικοποίηση HashSet για να μπουν μοναδικές τιμές χωρών
+        HashSet<String> countrySet = new HashSet<>();
+        
+        //γέμισμα countrySet με μοναδικές τιμές χωρών
+        for (int i=0;i<universities.size();i++){
+            if(universities.get(i).getCountry() != null && !universities.get(i).getCountry().isEmpty()){
+                countrySet.add(universities.get(i).getCountry());
+            }
+        }
+        
+        //αρχικοποίηση λίστας που θα περιέχει ταξινομημένες (Α-Ζ) μοναδικές τιμές χωρών
+        List<String> countryList = new ArrayList<>(countrySet);
+        
+        Collections.sort(countryList);//ταξινόμηση countryList Α-Ζ
+        
+        return countryList;
+    }
+    
+    
+    //μέθοδος που επιστρέφει σε ένα String τις πληροφορίες του πανεπιστημίου
     @Override
     public String toString(){
         StringBuilder webPageStr = new StringBuilder();

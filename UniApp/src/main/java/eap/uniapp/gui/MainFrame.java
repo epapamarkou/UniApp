@@ -1,17 +1,21 @@
 package eap.uniapp.gui;
 
+import eap.uniapp.UniApp;
+import eap.uniapp.model.JavaUniversity;
 import javax.swing.*;
 import java.awt.*;
 
 public class MainFrame extends JFrame{
     
-    private JPanel mainPanel;
-    private CardLayout cardLayout;
+    private final JPanel mainPanel;
+    private final CardLayout cardLayout;
+    private JavaUniversity selectedUni;
+    
     
     //constructor κεντρικού frame
     public MainFrame(){
         setTitle("UniApp"); //ορισμός τίτλου εφαρμογής
-        setSize(1000,600); //ορισμός μεγέθους του παραθύρου
+        setSize(1000,700); //ορισμός μεγέθους του παραθύρου
         setLocationRelativeTo(null); //τοποθέτηση frame στο κέντρο της οθόνης
         setDefaultCloseOperation(EXIT_ON_CLOSE); //κλείσιμο εφαρμογής από το Χ του παραθύρου
         setLayout(new BorderLayout()); //ορισμός Layout Manager του Frame σε 5 ζώνες N,S,E,W,C
@@ -52,18 +56,16 @@ public class MainFrame extends JFrame{
         Font font = new Font("Arial",Font.BOLD,14);
         Color backgroundColor = new Color(0xffffff); //λευκό
         Color foregroundColor = new Color(0x003366); //μπλε
-        Color borderColor = new Color(0xffff00); //κιτρινο
+        Color borderColor = new Color(0x003366); //μπλε
         
         //δημιουργία κουμπιών με τη μέθοδο createButton
-        JButton buttonSearch = createButton("Universities by Name",new Dimension(180,40),font,backgroundColor,foregroundColor,borderColor);
-        JButton buttonList = createButton("Universities by Country",new Dimension(180,40),font,backgroundColor,foregroundColor,borderColor);
+        JButton buttonSearch = createButton("Search",new Dimension(120,40),font,backgroundColor,foregroundColor,borderColor);
         JButton buttonStats = createButton("Statistics",new Dimension(100,40),font,backgroundColor,foregroundColor,borderColor);
         JButton buttonInfo = createButton("Team Info",new Dimension(120,40),font,backgroundColor,foregroundColor,borderColor);
         JButton buttonExit = createButton("Exit",new Dimension(100,40),font,backgroundColor,foregroundColor,borderColor);
         
         //τοποθέτηση των κουμπιών στο rightPanel
         rightPanel.add(buttonSearch);
-        rightPanel.add(buttonList);
         rightPanel.add(buttonStats);
         rightPanel.add(buttonInfo);
         rightPanel.add(buttonExit);
@@ -87,23 +89,28 @@ public class MainFrame extends JFrame{
         
         
         //ΔΗΜΙΟΥΡΓΙΑ ΔΙΑΦΟΡΕΤΙΚΏΝ JPanels και προσθήκη αυτών στο mainPanel
-        mainPanel.add(new WelcomePanel()); //βγαίνει πρώτο με το που ανοίγει η εφαρμογή
-        mainPanel.add(new SearchPanel(), "search");
-        mainPanel.add(new CountryPanel(), "country");
+        mainPanel.add(new WelcomePanel(), "welcome");
+        mainPanel.add(new SearchPanel(this), "search");
         mainPanel.add(new StatisticsPanel(), "stats");
         mainPanel.add(new InfoPanel(), "info");
-        mainPanel.add(new ViewUniPanel(), "view"); //αυτό θα βγαίνει με επιλογή είτε απ΄το SearchPanel, είτε απ΄το CountryPanel
+        
         
         //προσθήκη listeners στα κουμπιά για εναλλαγή των JPanels
         buttonSearch.addActionListener(e -> cardLayout.show(mainPanel, "search")); 
-        buttonList.addActionListener(e -> cardLayout.show(mainPanel, "country")); 
         buttonStats.addActionListener(e -> cardLayout.show(mainPanel, "stats"));
         buttonInfo.addActionListener(e -> cardLayout.show(mainPanel, "info")); 
         buttonExit.addActionListener(e -> System.exit(0)); //κλείσιμο εφαρμογής από κουμπί Exit
+        //buttonExit.addActionListener(e -> UniApp.exitApp()); //κλείσιμο εφαρμογής από κουμπί Exit
+        
+        cardLayout.show(mainPanel, "welcome"); //ξεκινά με το WelcomePanel
         
         setVisible(true);
-    }
+    }//end constructor
     
+    //setter για selectedUni
+    public void setSelectedUni(JavaUniversity uni){
+        this.selectedUni = uni;
+    }
     
     //μέθοδος δημιουργίας κουμπιών
     private JButton createButton(String button_text, Dimension size, Font font, 
@@ -123,6 +130,20 @@ public class MainFrame extends JFrame{
         button.setBorder(BorderFactory.createLineBorder(border_color,3));
         
         return button;
+    }
+    
+    //ΔΙΑΧΕΙΡΙΣΗ ΤΩΝ JPANELS
+    //μέθοδος επιστροφής στο SearchPanel
+    public void backToSearch(){ cardLayout.show(mainPanel, "search"); }
+    
+    //μέθοδος εμφάνισης ViewUniPanel
+    public void showViewUniPanel(){
+        //δημιουργία νέου ViewUniPanel με το επιλεγμένο πανεπιστήμιο και αναφορά στο MainFrame
+        ViewUniPanel viewUniPanel = new ViewUniPanel(selectedUni,this);
+        // προσθήκη του viewUniPanel στο mainPanel
+        mainPanel.add(viewUniPanel, "view");
+        // εμφάνιση στο mainPanel του ViewUniPanel με το επιλεγμένο πανεπιστήμιο
+        cardLayout.show(mainPanel, "view");
     }
     
 } //end MainFrame

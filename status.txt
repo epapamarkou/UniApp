@@ -6,8 +6,11 @@ Contains entity classes, jpa controller, first look of frames.
 The file eap.uniapp.test.json.txt for json array management
 
 19-02-2025
-
+LaunchGUI method, GUI creation and switching between JPanels, search university done,
+JPanel team info done,Exit of app done.
 
 22-02-2025
+One search for name and country in search panel, method searchUniversities changed, 
+small changes in GUI.
 
-
+-02-2025

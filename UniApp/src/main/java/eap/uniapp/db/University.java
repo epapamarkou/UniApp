@@ -9,7 +9,10 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-
+/**
+ * POJOs classes
+ * @author
+ */
 @Entity
 @Table(name = "UNIVERSITY")
 @NamedQueries({
@@ -54,16 +57,29 @@ public class University implements Serializable {
     @Column(name = "CONTACT")
     private String contact;
     
-    //constructor 1
+    
+    /**
+     * constructor 1
+     */
     public University() {
     }
     
-    //constructor 2
+    /**
+     * constructor 2
+     * @param name
+     */
     public University(String name) {
         this.name = name;
     }
     
-    //constructor 3
+    /**
+     * constructor 3
+     * @param name
+     * @param alphatwocode
+     * @param country
+     * @param webpages
+     * @param domains
+     */
     public University(String name, String alphatwocode, String country, String webpages, String domains) {
         this.name = name;
         this.alphatwocode = alphatwocode;
@@ -72,30 +88,146 @@ public class University implements Serializable {
         this.domains = domains;
     }
     
-    //getters
+    /**
+     * getter για name
+     * @return
+     */
     public String getName() { return name; }
+
+    /**
+     * getter για stateprovince
+     * @return
+     */
     public String getStateprovince() { return stateprovince; }
+
+    /**
+     * getter για alphatwocode
+     * @return
+     */
     public String getAlphatwocode() { return alphatwocode; }
+
+    /**
+     * getter για country
+     * @return
+     */
     public String getCountry() { return country; }
+
+    /**
+     * getter για webpages
+     * @return
+     */
     public String getWebpages() { return webpages; }
+
+    /**
+     * getter για domains
+     * @return
+     */
     public String getDomains() { return domains; }
+
+    /**
+     * getter για searches
+     * @return
+     */
     public Integer getSearches() { return searches; }
+
+    /**
+     * getter για comments
+     * @return
+     */
     public String getComments() { return comments; }
+
+    /**
+     * getter για description
+     * @return
+     */
     public String getDescription() { return description; }
+
+    /**
+     * getter για contact
+     * @return
+     */
     public String getContact() { return contact; }
     
     //setters
-    public void setName(String name) { this.name = name;}
-    public void setStateprovince(String stateprovince) { this.stateprovince = stateprovince; }
-    public void setAlphatwocode(String alphatwocode) { this.alphatwocode = alphatwocode; }
-    public void setCountry(String country) { this.country = country; }
-    public void setWebpages(String webpages) { this.webpages = webpages; }
-    public void setDomains(String domains) { this.domains = domains; }
-    public void setSearches(Integer searches) { this.searches = searches; }
-    public void setComments(String comments) { this.comments = comments; }
-    public void setDescription(String description) { this.description = description; }
-    public void setContact(String contact) { this.contact = contact; }
 
+    /**
+     *
+     * @param name
+     */
+    public void setName(String name) { this.name = name;}
+
+    /**
+     *
+     * @param stateprovince
+     */
+    public void setStateprovince(String stateprovince) { this.stateprovince = stateprovince; }
+
+    /**
+     *
+     * @param alphatwocode
+     */
+    public void setAlphatwocode(String alphatwocode) { this.alphatwocode = alphatwocode; }
+
+    /**
+     *
+     * @param country
+     */
+    public void setCountry(String country) { this.country = country; }
+
+    /**
+     *
+     * @param webpages
+     */
+    public void setWebpages(String webpages) { this.webpages = webpages; }
+
+    /**
+     *
+     * @param domains
+     */
+    public void setDomains(String domains) { this.domains = domains; }
+
+    /**
+     *
+     * @param searches
+     */
+    public void setSearches(Integer searches) { this.searches = searches; }
+
+    /**
+     *
+     * @param comments
+     */
+    public void setComments(String comments) { this.comments = comments; }
+
+    /**
+     *
+     * @param description
+     */
+    public void setDescription(String description) { this.description = description; }
+
+    /**
+     *
+     * @param contact
+     */
+    public void setContact(String contact) { this.contact = contact; }
+    
+    //μέθοδος αύξησης των Searches-αναζητήσεων κατά 1
+
+    /**
+     *
+     */
+    public void addSearch(){
+        if(getSearches() != null){
+            setSearches(getSearches() + 1);
+        }else{
+            setSearches(1);
+        }
+        
+    }
+    
+    /**
+     *
+     * @return
+     */
     @Override
     public int hashCode() {
         int hash = 0;
@@ -103,6 +235,11 @@ public class University implements Serializable {
         return hash;
     }
 
+    /**
+     *
+     * @param object
+     * @return
+     */
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
@@ -116,6 +253,10 @@ public class University implements Serializable {
         return true;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public String toString() {
         return "eap.uniapp.db.University[ name=" + name + " ]";

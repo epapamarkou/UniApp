@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import okhttp3.*;
 
+/**
+ *
+ * @author Ersi
+ */
 public class UrlCall {
     
     private static final String URL_BASE = "http://universities.hipolabs.com/search?";
@@ -17,6 +21,10 @@ public class UrlCall {
     private final Gson gson;
     
     //constructor
+
+    /**
+     *
+     */
     public UrlCall() {
         this.client = new OkHttpClient();
         this.gson = new Gson();;
@@ -26,6 +34,14 @@ public class UrlCall {
     //Mέθοδος που επιστρέφει τα πανεπιστήμια του request σε λίστα ανάλογα με το 
     //φίλτρο αναζήτησης. Μετατρέπει το JSON array με τα JSON objects, σε λίστα
     //με Java objects
+
+    /**
+     *
+     * @param name
+     * @param country
+     * @param useJsonUrl
+     * @return
+     */
     
     public List<JavaUniversity> SearchUniversities(String name, String country, boolean useJsonUrl){
         //δόμηση του url

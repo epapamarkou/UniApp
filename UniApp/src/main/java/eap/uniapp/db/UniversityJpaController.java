@@ -2,25 +2,23 @@ package eap.uniapp.db;
 
 import eap.uniapp.db.exceptions.NonexistentEntityException;
 import eap.uniapp.db.exceptions.PreexistingEntityException;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import java.io.Serializable;
-import jakarta.persistence.Query;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
-import java.util.List;
 
-/**
- *
- * @author Ersi
- */
+import java.util.List;
+import java.io.Serializable;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
+
 public class UniversityJpaController implements Serializable {
     
     //constructor
     public UniversityJpaController(EntityManagerFactory emf) {
         this.emf = emf;
-        System.out.println("Entity Manager Factory created.");
+        System.out.println("Entity Manager Factory created on UniversityJpaController.");
     }
     
     private EntityManagerFactory emf = null;
@@ -29,16 +27,8 @@ public class UniversityJpaController implements Serializable {
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
-    /*
-    //μέθοδος κλεισίματος του EntityManagerFactory
-    public void close(){
-        if(emf != null && emf.isOpen()){
-            emf.close();
-            System.out.println("Entity Manager Factory closed.");
-        }
-    }
-    */
-    //
+    
+    
     public void create(University university) throws PreexistingEntityException, Exception {
         EntityManager em = null;
         try {
@@ -58,7 +48,7 @@ public class UniversityJpaController implements Serializable {
         }
     }
     
-    //
+    
     public void edit(University university) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
@@ -82,7 +72,7 @@ public class UniversityJpaController implements Serializable {
         }
     }
     
-    //
+    
     public void destroy(String id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
@@ -104,17 +94,17 @@ public class UniversityJpaController implements Serializable {
         }
     }
     
-    //
+    
     public List<University> findUniversityEntities() {
         return findUniversityEntities(true, -1, -1);
     }
     
-    //
+    
     public List<University> findUniversityEntities(int maxResults, int firstResult) {
         return findUniversityEntities(false, maxResults, firstResult);
     }
     
-    //
+    
     private List<University> findUniversityEntities(boolean all, int maxResults, int firstResult) {
         EntityManager em = getEntityManager();
         try {
@@ -131,8 +121,8 @@ public class UniversityJpaController implements Serializable {
         }
     }
     
-    //
-    public University findUniversity(String id) {
+    
+    public University findUniversity(String id) throws NonexistentEntityException, Exception{
         EntityManager em = getEntityManager();
         try {
             return em.find(University.class, id);
@@ -141,7 +131,7 @@ public class UniversityJpaController implements Serializable {
         }
     }
     
-    //
+    
     public int getUniversityCount() {
         EntityManager em = getEntityManager();
         try {
@@ -154,5 +144,6 @@ public class UniversityJpaController implements Serializable {
             em.close();
         }
     }
+    
     
 }

@@ -3,9 +3,17 @@ package eap.uniapp.gui;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ *
+ * @author 
+ */
 public class WelcomePanel extends JPanel{
     
     //constructor
+
+    /**
+     *
+     */
     public WelcomePanel(){
         
         setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));

@@ -1,6 +1,7 @@
 package eap.uniapp.gui;
 
 import eap.uniapp.model.JavaUniversity;
+import eap.uniapp.utils.ButtonUtils;
 import eap.uniapp.utils.UrlCall;
 import javax.swing.*;
 import java.awt.*;
@@ -59,7 +60,7 @@ public class SearchPanel extends JPanel{
         //γραμματοσειρά που φαινεται οταν πληκτρολογεί ο χρήστης
         nameField.setFont(new Font("Arial",Font.PLAIN,20));
         
-        searchButton = createButton("Go",new Dimension(100,40),new Font("Arial",Font.BOLD,16),
+        searchButton = ButtonUtils.createButton("Go",new Dimension(100,40),new Font("Arial",Font.BOLD,16),
                 new Color(0xffffff),new Color(0x003366),new Color(0x003366));
         
         
@@ -352,27 +353,5 @@ public class SearchPanel extends JPanel{
         
         
     } //τέλος μεθόδου αναζήτησης και ενημέρωσης πίνακα
-    
-    
-    //μέθοδος δημιουργίας κουμπιών
-    private JButton createButton(String button_text, Dimension size, Font font, 
-            Color back_color, Color fore_color,Color border_color){
-        
-        JButton button = new JButton(button_text); //ορισμός κειμένου
-        button.setPreferredSize(size); //ορισμός μεγέθους
-        button.setFont(font); //ορισμός γραμματοσειράς
-        button.setBackground(back_color); //ορισμός χρώματος background
-        button.setForeground(fore_color); //ορισμός χρώματος κειμένου του κουμπιού
-        
-        //αφαίρεση εφέ γεμίσματος
-        button.setContentAreaFilled(false);
-        button.setOpaque(true);
-        
-        //περίγραμμα χρώμα και πάχος γραμμής
-        button.setBorder(BorderFactory.createLineBorder(border_color,3));
-        
-        return button;
-    } //τέλος μεθόδου δημιουργίας κουμπιών
-    
     
 }

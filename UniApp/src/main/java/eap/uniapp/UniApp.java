@@ -1,55 +1,68 @@
 package eap.uniapp;
 
-import eap.uniapp.gui.MainFrame;
 import eap.uniapp.db.UniversityJpaController;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
+import eap.uniapp.gui.MainFrame;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.swing.SwingUtilities;
 
-
-
+/**
+ *
+ * @author
+ */
 public class UniApp {
     
-    static EntityManagerFactory emf;
-    static EntityManager em;
-
+    /**
+     * δημιουργία στατικού Entity Manager Factory 
+     */
+    public static EntityManagerFactory emf;
+    
+    /**
+     * δημιουργία στατικού University Jpa Controller 
+     */
+    public static UniversityJpaController controller;
+    
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         System.out.println("Starting UniApp...");
         
-        //δημιουργία EntityManagerFactory και EntityManager
-        //emf = Persistence.createEntityManagerFactory("eap_UniApp_jar_1.0-SNAPSHOTPU");
-        //em = emf.createEntityManager();
+        System.out.println("Working Directory: " + System.getProperty("user.dir"));//debugging
         
-        //δημιουργία
-        //UniversityJpaController controller = new UniversityJpaController(emf);
+        emf = Persistence.createEntityManagerFactory("eap_UniApp_jar_1.0-SNAPSHOTPU");
+        controller = new UniversityJpaController(emf);
         
-        //άνοιγμα γραφικού περιβάλλοντος εφαρμογής
+        /**
+         * άνοιγμα γραφικού περιβάλλοντος εφαρμογής
+         */
         launchGUI();
         
         System.out.println("UniApp started...");
         
     } //end of Main
     
-    // μέθοδος εκκίνησης γραφικού περιβάλλοντος στο Event Dispatched Thread
+    
+    /**
+     * μέθοδος εκκίνησης γραφικού περιβάλλοντος στο Event Dispatched Thread
+     */
     private static void launchGUI(){
         SwingUtilities.invokeLater(MainFrame::new);
     }
     
-    // μέθοδος κλεισίματος εφαρμογής
-    public static void exitApp(){
-        emf.close();
-        System.out.println("Entity Manager Factory closed from UniApp.java.");
-    }
     
-    // μέθοδος δημιουργίας σύνδεσης στη ΒΔ
+    /**
+     * μέθοδος δημιουργίας σύνδεσης στη ΒΔ (χρησιμοποιήθηκε για την αρχική δημιουργία της ΒΔ)
+     * @return 
+     */
     public static Connection connect(){
         // αρχική δημιουργία βάσης
-        String connectionString = "jdbc:derby:db/university";
+        String connectionString = "jdbc:derby:db/university;create=true";
         
         try {
             Connection connection = DriverManager.getConnection(connectionString);
@@ -60,7 +73,10 @@ public class UniApp {
         return null;
     }
     
-    // μέθοδος δημιουργίας πινάκων της βάσης δεδομένων
+    
+    /**
+     * μέθοδος δημιουργίας πινάκων της βάσης δεδομένων (χρησιμοποιήθηκε για την αρχική δημιουργία της ΒΔ)
+     */
     public static void createDatabase(){
         Connection connection = connect();
         if (connection == null){
@@ -103,6 +119,5 @@ public class UniApp {
         }
         //end try-catch-finally
     }
-    
     
 }

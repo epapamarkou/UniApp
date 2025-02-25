@@ -1,26 +1,46 @@
 package eap.uniapp.gui;
 
+import eap.uniapp.UniApp;
+import eap.uniapp.db.University;
 import eap.uniapp.model.JavaUniversity;
+import eap.uniapp.utils.ButtonUtils;
 import javax.swing.*;
 import java.awt.*;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class ViewUniPanel extends JPanel{
     //δήλωση μεταβλητών κλάσης
-    private final JavaUniversity university;
-    private MainFrame mainFrame;
+    private JavaUniversity university;
+    private final MainFrame mainFrame;
+    private JTextField countryField;
+    private JTextField stateProninceField;
+    private JTextField alphaTwoCodeField;
+    private JTextField webPagesField;
+    private JTextField domainsField;
+    private JTextField contactField;
+    private JTextField descriptionField;
+    private JTextField commentsField;
+    private JLabel titleLabel;
+    private boolean isEditing = false;
+    
     
     //constructor
     public ViewUniPanel(JavaUniversity university,MainFrame mainFrame){
         this.university = university;
         this.mainFrame = mainFrame;
         
+        
         setLayout(new BorderLayout());
         setBackground(new Color(0xd0edef)); //light blue
         
-        //τίτλος πανεπιστημίου
-        JLabel titleLabel = new JLabel(university.getName(),SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Segoe UI",Font.BOLD,26));
+        System.out.println("ViewUniPanel loaded...");
+        
+        //τίτλος πανεπιστημίου settings και αρχικοποίηση
+        titleLabel = new JLabel("",SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial",Font.BOLD,26));
         titleLabel.setBackground(new Color(0xffffff));
         titleLabel.setForeground(new Color(0x003366));
         titleLabel.setOpaque(false);
@@ -31,14 +51,15 @@ public class ViewUniPanel extends JPanel{
         
         //ΠΛΗΡΟΦΟΡΙΕΣ ΠΑΝΕΠΙΣΤΗΜΙΟΥ
         
-        //δημιουργία των JTextFields
-        JTextField countryField = createTextField(university.getCountry());
-        JTextField stateProninceField = createTextField(university.getStateProvince());
-        JTextField alphaTwoCodeField = createTextField(university.getAlphaTwoCode());
-        JTextField webPagesField = createTextField(String.join(", ", university.getWebPages()));
-        JTextField domainsField = createTextField(String.join(", ", university.getDomains()));
-        JTextField contactField = createTextField("");
-        JTextField descriptionField = createTextField("");
+        //αρχικοποίηση των JTextFields
+        countryField = createTextField("");
+        stateProninceField = createTextField("");
+        alphaTwoCodeField = createTextField("");
+        webPagesField = createTextField("");
+        domainsField = createTextField("");
+        contactField = createTextField("");
+        descriptionField = createTextField("");
+        commentsField = createTextField("");
         
         //δημιουργία του infoPanel που θα τις πληροφορίες σε δύο στήλες Όνομα-Τιμή
         JPanel infoPanel = new JPanel();
@@ -68,30 +89,57 @@ public class ViewUniPanel extends JPanel{
         infoPanel.add(Box.createRigidArea(new Dimension(0,10)));
         //description
         infoPanel.add(createInfoRow("Description:", descriptionField, new Dimension(350, 90)));
-        
+        infoPanel.add(Box.createRigidArea(new Dimension(0,10)));
+        //comments
+        infoPanel.add(createInfoRow("Comments:", commentsField, new Dimension(350, 60)));
         
         //κουμπί edit
-        JButton editButton = createButton("Edit",new Dimension(100,40),new Font("Segoe UI",Font.BOLD,16),
+        JButton editButton = ButtonUtils.createButton("Edit",new Dimension(100,40),new Font("Arial",Font.BOLD,16),
                 new Color(0xffffff),new Color(0x003366),new Color(0x003366));
         editButton.addActionListener(e -> {
-            //τα πεδία γίνονται επεξεργάσιμα με το πάτημα του editButton
-            countryField.setEditable(true);
-            stateProninceField.setEditable(true);
-            alphaTwoCodeField.setEditable(true);
-            webPagesField.setEditable(true);
-            domainsField.setEditable(true);
-            contactField.setEditable(true);
-            descriptionField.setEditable(true);
+            if(isEditing){
+                //αν είναι σε κατάσταση επεξεργασίας, με το πάτημα του cancel, τα πεδία γίνονται non-editable
+                setFieldsEditable(false);
+                //αλλαγή τιμής στη μεταβλητή isEditing
+                isEditing = false;
+                //
+                System.out.println("Cancel button pressed. University textfields refreshed: "+ titleLabel.getText()); //debugging
+                stableViewPanelfromDB(titleLabel.getText());
+                //το κουμπί Cancel επαναφέρεται σε Edit
+                editButton.setText("Edit");
+            }else{
+                //αν δεν είναι σε κατάσταση επεξεργασίας, με το πάτημα του edit, τα πεδία γίνονται editable
+                setFieldsEditable(true);
+                //αλλαγή τιμής στη μεταβλητή isEditing
+                isEditing = true;
+                System.out.println("Edit button pressed.");
+                //το κουμπί Edit αλλάζει σε Cancel
+                editButton.setText("Cancel");
+            }
         });
         
         //κουμπί αποθήκευση στη ΒΔ
-        JButton saveToDBButton = createButton("Save to DB",new Dimension(100,40),new Font("Segoe UI",Font.BOLD,16),
+        JButton saveToDBButton = ButtonUtils.createButton("Save to DB",new Dimension(100,40),new Font("Segoe UI",Font.BOLD,16),
                 new Color(0xffffff),new Color(0x003366),new Color(0x003366));
-        //saveToDBButton.addActionListener(e -> mainFrame.backToSearch());
+        saveToDBButton.addActionListener(e -> {
+            if(isEditing){
+                String uniName = titleLabel.getText();
+                //είναι σε κατάσταση επεξεργασίας και αποθηκεύονται/ανανεώνονται τα περιεχόμενα στη ΒΔ
+                updateUniversitytoDB(uniName);
+                //μετά το update τα πεδία γίνονται non-editable
+                setFieldsEditable(false);
+                //το κουμπί Cancel επαναφέρεται σε Edit
+                editButton.setText("Edit");
+                
+            }else{
+                JOptionPane.showMessageDialog(this, "Please click 'Edit' to enable editing.",
+                        "No changes made.",JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
         
         
         //κουμπί πίσω
-        JButton backButton = createButton("Back",new Dimension(100,40),new Font("Segoe UI",Font.BOLD,16),
+        JButton backButton = ButtonUtils.createButton("Back",new Dimension(100,40),new Font("Segoe UI",Font.BOLD,16),
                 new Color(0xffffff),new Color(0x003366),new Color(0x003366));
         backButton.addActionListener(e -> mainFrame.backToSearch());//κλήση επιστροφής
         
@@ -109,6 +157,189 @@ public class ViewUniPanel extends JPanel{
         add(titleLabel,BorderLayout.NORTH);
         add(infoPanel,BorderLayout.CENTER);
         add(bottomPanel,BorderLayout.SOUTH);
+    }//end of constructor
+    
+    //ΜΕΘΟΔΟΙ ΚΛΑΣΗΣ
+    
+    //εδώ έρχεται το πανεπιστήμιο που επιλέχθηκε για προεπισκόπιση στο SearchPanel
+    public void updateUniversity(JavaUniversity uni){
+        this.university = uni;
+        
+        //μεταβλητή που φέρει το αποτέλεσμα αν βρέθηκε ή όχι στη ΒΔ
+        boolean flag = checkExistence(university.getName());
+        
+        //μεταβλητή που φέρει το όνομα του πανεπιστημίου
+        String name = university.getName();
+        
+        //αν το flag=true, φορτώνει δεδομένα απ'τη ΒΔ
+        //αν το flag=false, φορτώνει δεδομένα απ'το API και αποθηκεύει νέα εγγραφή στη ΒΔ
+        if (flag){
+            try {
+                refreshViewPanelfromDB(name);
+            } catch (Exception ex) {
+                System.out.println("updateUniversity error: " + ex.getMessage());
+                Logger.getLogger(ViewUniPanel.class.getName()).log(Level.SEVERE, "Error in ViewUniPanel (updateUniversity)", ex);
+            }
+        }else{
+            refreshViewPanel(); //καλείται για ανανέωση περιεχομένου
+            saveUniversitytoDB(); //αποθήκευση πανεπιστημίου στη ΒΔ
+        }
+    }
+    
+    //μέθοδος που επιστρέφει TRUE αν υπάρχει εγγραφή του πανεπιστημίου στη ΒΔ και
+    //FALSE αν δεν υπάρχει εγγραφή. Έλεγχος με το κλειδί name.
+    public boolean checkExistence(String name){
+        try {
+            //αντί για if-else γράφω απευθείας την έκφραση που αποτιμάται σε Τ ή F
+            return (UniApp.controller.findUniversity(name) != null);
+        } catch (Exception ex) {
+            System.out.println("checkExistence error: " + ex.getMessage());
+            Logger.getLogger(ViewUniPanel.class.getName()).log(Level.SEVERE, "Error in ViewUniPanel (checkExistence)", ex);
+        }
+        return false;
+    }
+    
+    // ανανεωση του περιεχόμενου του ViewUniPanel from API data
+    public void refreshViewPanel(){
+        System.out.println("method refreshViewPanel from API data:" + university.getName());//debugging
+        titleLabel.setText(university.getName());
+        countryField.setText(university.getCountry());
+        stateProninceField.setText(university.getStateProvince());
+        alphaTwoCodeField.setText(university.getAlphaTwoCode());
+        webPagesField.setText(String.join(", ", university.getWebPages()));
+        domainsField.setText(String.join(", ", university.getDomains()));
+        contactField.setText("");
+        descriptionField.setText("");
+        commentsField.setText("");
+    }
+    
+    // ανανεωση του περιεχόμενου του ViewUniPanel from DB με ΑΥΞΗΣΗ ΤΩΝ ΑΝΑΖΗΤΗΣΕΩΝ
+    public void refreshViewPanelfromDB(String name){
+        try{
+            //ανάκτηση πανεπιστημίου απ'τη ΒΔ
+            University dbUniversity = UniApp.controller.findUniversity(name);
+
+            if(dbUniversity == null){
+                System.out.println("University not found in Database.");
+                return;
+            }
+            
+            //αύξηση των εμφανίσεων του πανεπιστημίου
+            dbUniversity.addSearch();
+
+            //αποθήκευση της αύξησης (αλλαγή) στη βαση δεδομενων (ο controller αποθηκεύει στη ΒΔ)
+            UniApp.controller.edit(dbUniversity);
+
+            System.out.println("method refreshViewPanel from DB:" + dbUniversity.getName() +
+                    ", Total searches: " + dbUniversity.getSearches());//debugging
+            
+            //ενημέρωση GUI με δεδομένα από τη ΒΔ
+            titleLabel.setText(dbUniversity.getName());
+            countryField.setText(dbUniversity.getCountry());
+            stateProninceField.setText(dbUniversity.getStateprovince());
+            alphaTwoCodeField.setText(dbUniversity.getAlphatwocode());
+            webPagesField.setText(dbUniversity.getWebpages());
+            domainsField.setText(dbUniversity.getDomains());
+            contactField.setText(dbUniversity.getContact());
+            descriptionField.setText(dbUniversity.getDescription());
+            commentsField.setText(dbUniversity.getComments());
+            
+        }catch(Exception ex){
+            System.out.println("refreshViewPanelfromDB error: " + ex.getMessage());
+            Logger.getLogger(ViewUniPanel.class.getName()).log(Level.SEVERE, "Error in ViewUniPanel (refreshViewPanelfromDB)", ex);
+        }
+    }
+    
+    
+    // ανανεωση του περιεχόμενου του ViewUniPanel from DB, ΧΩΡΙΣ ΑΥΞΗΣΗ ΤΩΝ ΕΜΦΑΝΙΣΕΩΝ
+    public void stableViewPanelfromDB(String name){
+        try{
+            //ανάκτηση πανεπιστημίου απ'τη ΒΔ
+            University dbUniversity = UniApp.controller.findUniversity(name);
+
+            if(dbUniversity == null){
+                System.out.println("University not found in Database.");
+                return;
+            }
+            
+            System.out.println("method stableViewPanel from DB:" + dbUniversity.getName() +
+                    ", Total searches: " + dbUniversity.getSearches());//debugging
+            
+            //ενημέρωση GUI με δεδομένα από τη ΒΔ
+            titleLabel.setText(dbUniversity.getName());
+            countryField.setText(dbUniversity.getCountry());
+            stateProninceField.setText(dbUniversity.getStateprovince());
+            alphaTwoCodeField.setText(dbUniversity.getAlphatwocode());
+            webPagesField.setText(dbUniversity.getWebpages());
+            domainsField.setText(dbUniversity.getDomains());
+            contactField.setText(dbUniversity.getContact());
+            descriptionField.setText(dbUniversity.getDescription());
+            commentsField.setText(dbUniversity.getComments());
+            
+        }catch(Exception ex){
+            System.out.println("stableViewPanelfromDB error: " + ex.getMessage());
+            Logger.getLogger(ViewUniPanel.class.getName()).log(Level.SEVERE, "Error in ViewUniPanel (refreshViewPanelfromDB)", ex);
+        }
+    }
+    
+    
+    //πρώτη αποθήκευση στη βάση δεδομένων
+    public void saveUniversitytoDB(){
+        //δημιουργία αντικειμένου University για αποθήκευση στη ΒΔ
+        University universityToSave = new University();//πρώτη φορά
+        
+        try{
+            //αντιγραφή δεδομένων από JavaUniversity που είναι προς προβολή και 
+            //ανάθεσή τους στο University που θα αποθηκευτεί στη ΒΔ, χρησιμοποιώντας 
+            //τις μεθόδους της University.java
+            universityToSave.setName(university.getName());
+            universityToSave.setCountry(university.getCountry());
+            universityToSave.setStateprovince(university.getStateProvince());
+            universityToSave.setAlphatwocode(university.getAlphaTwoCode());
+            universityToSave.setWebpages(String.join(", ", university.getWebPages()));
+            universityToSave.setDomains(String.join(", ", university.getDomains()));
+            universityToSave.addSearch(); //αύξηση των εμφανίσεων του πανεπιστημίου στη ΒΔ
+            
+            //o controller αποθηκεύει το πανεπιστήμιο στη ΒΔ
+            UniApp.controller.create(universityToSave);
+            System.out.println("New university added to database: "+ universityToSave.getName());
+        }
+        catch(SQLException sqlEx){
+            System.out.println("saveUniversitytoDB SQL error: " + sqlEx.getMessage());
+        }
+        catch(Exception ex){
+            System.out.println("saveUniversitytoDB error: " + ex.getMessage());
+        }
+    }
+    
+    //Ενημέρωση πανεπιστημίου στη βάση δεδομένων
+    public void updateUniversitytoDB(String name){
+        //δημιουργία αντικειμένου University from db για αποθήκευση στη ΒΔ
+        University universityToUpdate = null;
+        
+        try{
+            //αναζήτηση του πανεπιστημίου στη βάση δεδομένων
+            universityToUpdate = UniApp.controller.findUniversity(name);
+            
+            //Αν βρεθεί ενημερώνεται με τις νέες τιμές το universityToUpdate
+            universityToUpdate.setCountry(countryField.getText());
+            universityToUpdate.setStateprovince(stateProninceField.getText());
+            universityToUpdate.setAlphatwocode(alphaTwoCodeField.getText());
+            universityToUpdate.setWebpages(webPagesField.getText());
+            universityToUpdate.setDomains(domainsField.getText());
+            universityToUpdate.setContact(contactField.getText());
+            universityToUpdate.setDescription(descriptionField.getText());
+            universityToUpdate.setComments(commentsField.getText());
+            
+            //o controller αποθηκεύει τις αλλαγές στο πανεπιστήμιο στη ΒΔ
+            UniApp.controller.edit(universityToUpdate);
+            System.out.println("University updated in database: "+ universityToUpdate.getName());
+            JOptionPane.showMessageDialog(this, "Changes have been saved to Database.",
+                        "Save message.",JOptionPane.INFORMATION_MESSAGE);
+            
+        }catch(Exception ex){
+            System.out.println("Error while updating the university: " + ex.getMessage());
+        }
     }
     
     //μέθοδος δημιουργίας JTextField για την εμφάνιση του ονόματος του κάθε πεδίου
@@ -146,25 +377,18 @@ public class ViewUniPanel extends JPanel{
     }
 
     
-    //μέθοδος δημιουργίας κουμπιών
-    private JButton createButton(String button_text, Dimension size, Font font, 
-            Color back_color, Color fore_color,Color border_color){
-        
-        JButton button = new JButton(button_text); //ορισμός κειμένου
-        button.setPreferredSize(size); //ορισμός μεγέθους
-        button.setFont(font); //ορισμός γραμματοσειράς
-        button.setBackground(back_color); //ορισμός χρώματος background
-        button.setForeground(fore_color); //ορισμός χρώματος κειμένου του κουμπιού
-        
-        //αφαίρεση εφέ γεμίσματος
-        button.setContentAreaFilled(false);
-        button.setOpaque(true);
-        
-        //περίγραμμα χρώμα και πάχος γραμμής
-        button.setBorder(BorderFactory.createLineBorder(border_color,3));
-        
-        return button;
-    } //τέλος μεθόδου δημιουργίας κουμπιών
+    //μέθοδος για να γίνουν τα Text Fields editable ή όχι
+    private void setFieldsEditable(boolean editable){
+        //τα πεδία γίνονται επεξεργάσιμα ή όχι ανάλογα με το editable
+        countryField.setEditable(editable);
+        stateProninceField.setEditable(editable);
+        alphaTwoCodeField.setEditable(editable);
+        webPagesField.setEditable(editable);
+        domainsField.setEditable(editable);
+        contactField.setEditable(editable);
+        descriptionField.setEditable(editable);
+        commentsField.setEditable(editable);
+    }
     
 }
 

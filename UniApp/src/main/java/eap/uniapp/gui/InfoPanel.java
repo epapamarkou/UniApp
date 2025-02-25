@@ -82,8 +82,6 @@ public class InfoPanel extends JPanel{
         rightLabel4.setAlignmentX(Component.CENTER_ALIGNMENT);
         rightPanel.add(rightLabel4);
         
-        
-        
         //προσθήκη των leftPanel και rightPanel στο teams JPanel
         teams.add(leftPanel);
         teams.add(centerPanel);
@@ -111,8 +109,6 @@ public class InfoPanel extends JPanel{
         add(imageLabel);
         add(Box.createVerticalGlue());
         
-    }
-    
-    
+    }// end of constructor
     
 }

@@ -13,4 +13,5 @@ JPanel team info done,Exit of app done.
 One search for name and country in search panel, method searchUniversities changed, 
 small changes in GUI.
 
--02-2025
+25-02-2025
+App optimization, statistics panel ok, export to pdf ok,part of chart, ButtonUtils creation.

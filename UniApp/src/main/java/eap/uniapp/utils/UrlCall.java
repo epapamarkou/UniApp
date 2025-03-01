@@ -10,20 +10,42 @@ import java.util.List;
 import okhttp3.*;
 
 /**
- *
- * @author Ersi
+ * <p>
+ * Η κλάση {@code UrlCall} είναι υπεύθυνη για την πραγματοποίηση HTTP αιτήσεων
+ * ώστε να ανακτηθούν δεδομένα πανεπιστημίων από το διαδίκτυο. Χρησιμοποιεί τη βιβλιοθήκη
+ * OkHttp για την εκτέλεση των αιτήσεων και τη Gson για τη μετατροπή των JSON δεδομένων
+ * σε αντικείμενα Java.
+ * </p>
+ * 
  */
 public class UrlCall {
     
+    /**
+     * Η βασική διεύθυνση URL για την αναζήτηση πανεπιστημίων.
+     */
     private static final String URL_BASE = "http://universities.hipolabs.com/search?";
-    private static final String URL_JSON = "https://raw.githubusercontent.com/Hipo/university-domains-list/refs/heads/master/world_universities_and_domains.json";
-    private final OkHttpClient client;
-    private final Gson gson;
-    
-    //constructor
 
     /**
-     *
+     * Διεύθυνση URL που οδηγεί σε ένα στατικό JSON αρχείο με λίστα πανεπιστημίων και domains.
+     */
+    private static final String URL_JSON = "https://raw.githubusercontent.com/Hipo/university-domains-list/refs/heads/master/world_universities_and_domains.json";
+
+    /**
+     * Αντικείμενο OkHttpClient για την εκτέλεση HTTP αιτήσεων.
+     */
+    private final OkHttpClient client;
+
+    /**
+     * Αντικείμενο Gson για τη μετατροπή JSON δεδομένων σε Java αντικείμενα.
+     */
+    private final Gson gson;
+    
+    
+    /**
+     * <p>
+     * Ο προεπιλεγμένος constructor της κλάσης, ο οποίος αρχικοποιεί τα αντικείμενα
+     * OkHttpClient και Gson για μελλοντική χρήση.
+     * </p>
      */
     public UrlCall() {
         this.client = new OkHttpClient();
@@ -36,13 +58,23 @@ public class UrlCall {
     //με Java objects
 
     /**
-     *
-     * @param name
-     * @param country
-     * @param useJsonUrl
-     * @return
+     * <p>
+     * Εκτελεί αναζήτηση πανεπιστημίων βάσει των κριτηρίων που δίνονται: 
+     * το όνομα και η χώρα. Εάν η παράμετρος {@code useJsonUrl} είναι {@code true},
+     * τότε χρησιμοποιείται το στατικό URL που περιέχει το JSON αρχείο. Διαφορετικά,
+     * κατασκευάζεται ένα URL με βάση τα κριτήρια που έχουν δοθεί από τον χρήστη.
+     * </p>
+     * <p>
+     * Μετά την εκτέλεση της HTTP αίτησης, το JSON array που λαμβάνεται μετατρέπεται σε λίστα
+     * αντικειμένων {@link JavaUniversity} και επιστρέφεται.
+     * </p>
+     * 
+     * @param name Το όνομα του πανεπιστημίου προς αναζήτηση (μπορεί να είναι {@code null} ή κενό).
+     * @param country Η χώρα προς αναζήτηση (μπορεί να είναι {@code null} ή κενό).
+     * @param useJsonUrl Εάν είναι {@code true}, χρησιμοποιείται το στατικό JSON URL,
+     *                   διαφορετικά κατασκευάζεται URL με βάση τα κριτήρια.
+     * @return Μια λίστα από αντικείμενα {@link JavaUniversity} που αντιστοιχούν στα αποτελέσματα της αναζήτησης.
      */
-    
     public List<JavaUniversity> SearchUniversities(String name, String country, boolean useJsonUrl){
         //δόμηση του url
         String URL;
@@ -92,8 +124,7 @@ public class UrlCall {
             e.getMessage();
         }
         
-        //επιστροφή κενής μεταβλητή λίστας
-        //return List.of();
+        //επιστροφή κενής λίστας
         return new ArrayList<>();
     }
     // end of SearchUniversities method

@@ -1,0 +1,6 @@
+eap.uniapp
+eap.uniapp.db
+eap.uniapp.db.exceptions
+eap.uniapp.gui
+eap.uniapp.model
+eap.uniapp.utils

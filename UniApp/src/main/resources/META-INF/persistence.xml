@@ -10,6 +10,8 @@
       <property name="javax.persistence.jdbc.user" value=""/>
       <property name="javax.persistence.jdbc.driver" value="org.apache.derby.iapi.jdbc.AutoloadedDriver"/>
       <property name="javax.persistence.jdbc.password" value=""/>
+      <property name="eclipselink.logging.level" value="ALL"/>
+      <property name="eclipselink.logging.file" value="log.txt"/>
     </properties>
   </persistence-unit>
 </persistence>

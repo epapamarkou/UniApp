@@ -3,10 +3,32 @@ package eap.uniapp.gui;
 import javax.swing.*;
 import java.awt.*;
 
-
+/**
+ * <p>
+ * Η κλάση {@code InfoPanel} επεκτείνει το {@link JPanel} και αποτελεί το κεντρικό
+ * πάνελ πληροφοριών της εφαρμογής. Σε αυτό εμφανίζονται ο τίτλος της εφαρμογής,
+ * τα στοιχεία του έργου (όπως ο Product Owner και η ομάδα Scrum) καθώς και η σχετική
+ * εικόνα του ΕΑΠ.
+ * </p>
+ * <p>
+ * Η διάταξη του πάνελ υλοποιείται με χρήση του {@link BoxLayout} σε κάθετη στοίχιση,
+ * ενώ εφαρμόζονται συγκεκριμένα χρώματα, γραμματοσειρές και στοίχιση για να επιτευχθεί
+ * μια ευχάριστη και συνεπής οπτική παρουσίαση.
+ * </p>
+ * 
+ */
 public class InfoPanel extends JPanel{
     
     //constructor
+
+    /**
+     * <p>
+     * Ο προεπιλεγμένος constructor της κλάσης {@code InfoPanel} δημιουργεί το UI στοιχείο
+     * πληροφοριών της εφαρμογής. Ορίζει τη διάταξη με χρήση {@link BoxLayout} και δημιουργεί
+     * τις ετικέτες (JLabels) για τον τίτλο, τους υπότιτλους και τα στοιχεία της ομάδας (Product Owner
+     * και Scrum Team). Επιπλέον, φορτώνει και εμφανίζει την εικόνα του ΕΑΠ.
+     * </p>
+     */
     public InfoPanel(){
         
         setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
@@ -35,7 +57,8 @@ public class InfoPanel extends JPanel{
         
         //JPanel για product owner και Scrum Team
         JPanel teams = new JPanel();
-        teams.setBackground(new Color (0xffffff));teams.setAlignmentX(Component.CENTER_ALIGNMENT);
+        teams.setBackground(new Color (0xffffff));
+        teams.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         //αριστερό μέρος-Product owner
         JPanel leftPanel = new JPanel();

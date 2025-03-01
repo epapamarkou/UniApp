@@ -10,8 +10,19 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
- * POJOs classes
- * @author
+ * <p>
+ * Η κλάση {@code University} αντιπροσωπεύει μια οντότητα Πανεπιστημίου,
+ * με όλα τα σχετικά πεδία και μεθόδους πρόσβασης (getters/setters).
+ * Χρησιμοποιείται στο πλαίσιο της JPA για την επικοινωνία με τη βάση
+ * δεδομένων και την αποθήκευση/ανάκτηση δεδομένων.
+ * </p>
+ * 
+ * <p>
+ * Περιλαμβάνει επίσης {@link NamedQueries} για συχνές ερωτήματα (queries)
+ * όπως αναζήτηση με βάση το όνομα, τη χώρα, το alphaTwoCode, κ.ά.
+ * </p>
+ * 
+ * 
  */
 @Entity
 @Table(name = "UNIVERSITY")
@@ -29,56 +40,100 @@ import javax.persistence.Table;
     @NamedQuery(name = "University.findByContact", query = "SELECT u FROM University u WHERE u.contact = :contact")})
 public class University implements Serializable {
 
+    /**
+     * Σειριακός αριθμός έκδοσης (χρήσιμος για διαδικασίες serialization).
+     */
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Το όνομα του Πανεπιστημίου (πρωτεύον κλειδί στη βάση δεδομένων).
+     */
     @Id
     @Basic(optional = false)
     @Column(name = "NAME")
     private String name;
+
+    /**
+     * Η πολιτεία ή επαρχία στην οποία βρίσκεται το Πανεπιστήμιο.
+     */
     @Column(name = "STATEPROVINCE")
     private String stateprovince;
+
+    /**
+     * Ο κωδικός δύο χαρακτήρων (π.χ. GR για Ελλάδα).
+     */
     @Basic(optional = false)
     @Column(name = "ALPHATWOCODE")
     private String alphatwocode;
+
+    /**
+     * Η χώρα στην οποία ανήκει το Πανεπιστήμιο.
+     */
     @Basic(optional = false)
     @Column(name = "COUNTRY")
     private String country;
+
+    /**
+     * Σύνδεσμοι (URLs) των ιστοσελίδων που σχετίζονται με το Πανεπιστήμιο.
+     */
     @Basic(optional = false)
     @Column(name = "WEBPAGES")
     private String webpages;
+
+    /**
+     * Τα domains (π.χ. "uoa.gr", "auth.gr") που συνδέονται με το Πανεπιστήμιο.
+     */
     @Basic(optional = false)
     @Column(name = "DOMAINS")
     private String domains;
+
+    /**
+     * Ο αριθμός των αναζητήσεων (searches) που έχουν πραγματοποιηθεί για το συγκεκριμένο Πανεπιστήμιο.
+     */
     @Column(name = "SEARCHES")
     private Integer searches;
+
+    /**
+     * Σχόλια (comments) σχετικά με το Πανεπιστήμιο.
+     */
     @Column(name = "COMMENTS")
     private String comments;
+
+    /**
+     * Περιγραφή (description) του Πανεπιστημίου (π.χ. ιστορικό, ιδρυτικές πληροφορίες).
+     */
     @Column(name = "DESCRIPTION")
     private String description;
+
+    /**
+     * Στοιχεία επικοινωνίας (contact) για το Πανεπιστήμιο, όπως διεύθυνση ή τηλέφωνο.
+     */
     @Column(name = "CONTACT")
     private String contact;
     
     
     /**
-     * constructor 1
+     * Βασικός constructor χωρίς ορίσματα.
+     * Χρησιμοποιείται από την JPA κατά τη δημιουργία αντικειμένων.
      */
     public University() {
     }
     
     /**
-     * constructor 2
-     * @param name
+     * Constructor που δέχεται μόνο το όνομα του Πανεπιστημίου.
+     * @param name Το όνομα του Πανεπιστημίου
      */
     public University(String name) {
         this.name = name;
     }
     
     /**
-     * constructor 3
-     * @param name
-     * @param alphatwocode
-     * @param country
-     * @param webpages
-     * @param domains
+     * Constructor που αρχικοποιεί βασικά πεδία του Πανεπιστημίου.
+     * @param name           Το όνομα του Πανεπιστημίου
+     * @param alphatwocode   Ο κωδικός δύο χαρακτήρων (π.χ. GR)
+     * @param country        Η χώρα στην οποία ανήκει
+     * @param webpages       Οι ιστοσελίδες που σχετίζονται με το Πανεπιστήμιο
+     * @param domains        Τα domains του Πανεπιστημίου
      */
     public University(String name, String alphatwocode, String country, String webpages, String domains) {
         this.name = name;
@@ -89,131 +144,132 @@ public class University implements Serializable {
     }
     
     /**
-     * getter για name
-     * @return
+     * Επιστρέφει το όνομα του Πανεπιστημίου.
+     * @return Το όνομα του Πανεπιστημίου
      */
     public String getName() { return name; }
 
     /**
-     * getter για stateprovince
-     * @return
+     * Επιστρέφει την πολιτεία ή επαρχία του Πανεπιστημίου.
+     * @return Η πολιτεία/επαρχία
      */
     public String getStateprovince() { return stateprovince; }
 
     /**
-     * getter για alphatwocode
-     * @return
+     * Επιστρέφει τον κωδικό δύο χαρακτήρων (π.χ. GR).
+     * @return Ο alphaTwoCode
      */
     public String getAlphatwocode() { return alphatwocode; }
 
     /**
-     * getter για country
-     * @return
+     * Επιστρέφει τη χώρα του Πανεπιστημίου.
+     * @return Η χώρα
      */
     public String getCountry() { return country; }
 
     /**
-     * getter για webpages
-     * @return
+     * Επιστρέφει τις ιστοσελίδες που σχετίζονται με το Πανεπιστήμιο.
+     * @return Τα URL των ιστοσελίδων
      */
     public String getWebpages() { return webpages; }
 
     /**
-     * getter για domains
-     * @return
+     * Επιστρέφει τα domains του Πανεπιστημίου.
+     * @return Τα domains
      */
     public String getDomains() { return domains; }
 
     /**
-     * getter για searches
-     * @return
+     * Επιστρέφει τον αριθμό των αναζητήσεων.
+     * @return Ο αριθμός των αναζητήσεων
      */
     public Integer getSearches() { return searches; }
 
     /**
-     * getter για comments
-     * @return
+     * Επιστρέφει τα σχόλια (comments) για το Πανεπιστήμιο.
+     * @return Τα σχόλια
      */
     public String getComments() { return comments; }
 
     /**
-     * getter για description
-     * @return
+     * Επιστρέφει την περιγραφή (description) του Πανεπιστημίου.
+     * @return Η περιγραφή
      */
     public String getDescription() { return description; }
 
     /**
-     * getter για contact
-     * @return
+     * Επιστρέφει τα στοιχεία επικοινωνίας (contact) του Πανεπιστημίου.
+     * @return Τα στοιχεία επικοινωνίας
      */
     public String getContact() { return contact; }
     
     //setters
 
     /**
-     *
-     * @param name
+     * Θέτει το όνομα του Πανεπιστημίου.
+     * @param name Το όνομα του Πανεπιστημίου
      */
     public void setName(String name) { this.name = name;}
 
     /**
-     *
-     * @param stateprovince
+     * Θέτει την πολιτεία/επαρχία του Πανεπιστημίου.
+     * @param stateprovince Η πολιτεία/επαρχία
      */
     public void setStateprovince(String stateprovince) { this.stateprovince = stateprovince; }
 
     /**
-     *
-     * @param alphatwocode
+     * Θέτει τον κωδικό δύο χαρακτήρων (alphaTwoCode).
+     * @param alphatwocode Ο κωδικός δύο χαρακτήρων
      */
     public void setAlphatwocode(String alphatwocode) { this.alphatwocode = alphatwocode; }
 
     /**
-     *
-     * @param country
+     * Θέτει τη χώρα του Πανεπιστημίου.
+     * @param country Η χώρα
      */
     public void setCountry(String country) { this.country = country; }
 
     /**
-     *
-     * @param webpages
+     * Θέτει τις ιστοσελίδες (webpages) του Πανεπιστημίου.
+     * @param webpages Οι ιστοσελίδες
      */
     public void setWebpages(String webpages) { this.webpages = webpages; }
 
     /**
-     *
-     * @param domains
+     * Θέτει τα domains του Πανεπιστημίου.
+     * @param domains Τα domains
      */
     public void setDomains(String domains) { this.domains = domains; }
 
     /**
-     *
-     * @param searches
+     * Θέτει τον αριθμό των αναζητήσεων.
+     * @param searches Ο αριθμός των αναζητήσεων
      */
     public void setSearches(Integer searches) { this.searches = searches; }
 
     /**
-     *
-     * @param comments
+     * Θέτει τα σχόλια (comments).
+     * @param comments Τα σχόλια
      */
     public void setComments(String comments) { this.comments = comments; }
 
     /**
-     *
-     * @param description
+     * Θέτει την περιγραφή (description) του Πανεπιστημίου.
+     * @param description Η περιγραφή
      */
     public void setDescription(String description) { this.description = description; }
 
     /**
-     *
-     * @param contact
+     * Θέτει τα στοιχεία επικοινωνίας (contact).
+     * @param contact Τα στοιχεία επικοινωνίας
      */
     public void setContact(String contact) { this.contact = contact; }
     
     //μέθοδος αύξησης των Searches-αναζητήσεων κατά 1
 
     /**
-     *
+     * Αυξάνει τον αριθμό των αναζητήσεων (searches) κατά 1. 
+     * Αν δεν έχει οριστεί ακόμα, αρχικοποιείται σε 1.
      */
     public void addSearch(){
         if(getSearches() != null){
@@ -225,8 +281,8 @@ public class University implements Serializable {
     }
     
     /**
-     *
-     * @return
+     * Μέθοδος που επιστρέφει τον hash code, με βάση το όνομα του Πανεπιστημίου.
+     * @return hash code που βασίζεται στο πεδίο {@code name}
      */
     @Override
     public int hashCode() {
@@ -236,9 +292,9 @@ public class University implements Serializable {
     }
 
     /**
-     *
-     * @param object
-     * @return
+     * Ελέγχει αν το παρόν αντικείμενο είναι ίσο με ένα άλλο {@code University}.
+     * @param object Ένα αντικείμενο προς σύγκριση
+     * @return {@code true} αν έχουν το ίδιο {@code name}, αλλιώς {@code false}
      */
     @Override
     public boolean equals(Object object) {
@@ -254,8 +310,9 @@ public class University implements Serializable {
     }
 
     /**
-     *
-     * @return
+     * Επιστρέφει μια συμβολοσειρά που αντιπροσωπεύει αυτό το αντικείμενο,
+     * περιλαμβάνοντας το όνομα του Πανεπιστημίου.
+     * @return Μια συμβολοσειρά (String) που περιέχει το όνομα 
      */
     @Override
     public String toString() {

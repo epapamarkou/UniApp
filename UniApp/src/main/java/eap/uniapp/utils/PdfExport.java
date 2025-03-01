@@ -1,5 +1,6 @@
 package eap.uniapp.utils;
 
+import com.itextpdf.text.BaseColor;
 import eap.uniapp.db.University;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -17,25 +18,46 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 /**
- * Κλάση που υλοποιεί την εξαγωγή των δεδομένων σε αρχείο PDF
- * με μια λίστα University δίνεται ως παράμετρος.
- * @author 
+ * <p>
+ * Κλάση που υλοποιεί την εξαγωγή των δεδομένων σε αρχείο PDF, χρησιμοποιώντας την
+ * βιβλιοθήκη iText. Δέχεται ως παράμετρο μια λίστα από {@link University} αντικείμενα,
+ * τα οποία εμφανίζονται σε πίνακα (με στήλες για αύξοντα αριθμό, όνομα και αναζητήσεις).
+ * </p>
+ * <p>
+ * Παρέχονται μέθοδοι για τη δημιουργία ονόματος αρχείου (συμπεριλαμβάνοντας timestamp)
+ * και για την πραγματική διαδικασία εξαγωγής σε PDF, με εμφάνιση αντίστοιχων μηνυμάτων
+ * επιτυχίας ή σφάλματος.
+ * </p>
+ * 
  */
 public class PdfExport {
     //πεδία κλάσης
+
+    /**
+     * Η λίστα με τα αντικείμενα {@link University} που θα αποτυπωθούν στο PDF.
+     */
     private List <University> data; //Η λίστα με τα University που θα αποτυπωθούν στο PDF
     
     /**
-     * Constructor με παράμετρο τη λίστα University
-     * @param data λίστα University
+     * <p>
+     * Constructor που αρχικοποιεί το αντικείμενο {@code PdfExport} με βάση τη λίστα
+     * των πανεπιστημίων ({@link University}) που δίδεται ως παράμετρος.
+     * </p>
+     * 
+     * @param data λίστα από {@link University} αντικείμενα που θα εμφανιστούν στο PDF
      */
     public PdfExport(List <University> data){
         this.data = data;
     }
     
     /**
-     * Δημιουργεί το όνομα του αρχείου PDF με timestamp
-     * @return το όνομα του αρχείου
+     * <p>
+     * Δημιουργεί το όνομα του αρχείου PDF, συνδυάζοντας ένα σταθερό πρόθεμα ("Results_")
+     * με τη χρονοσφραγίδα (timestamp) της τρέχουσας ημερομηνίας/ώρας.
+     * </p>
+     * 
+     * @return Ένα {@code String} που αναπαριστά το όνομα του αρχείου PDF 
+     *         (π.χ. "Results_20230215_143000.pdf")
      */
     public String generateFileName(){
         // document name + timestamp 
@@ -44,9 +66,20 @@ public class PdfExport {
     }
     
     /**
-     * Μέθοδος που εξάγει τα δεδομένα σε αρχείο PDF
-     * @throws DocumentException
-     * @throws IOException
+     * <p>
+     * Εξάγει τα δεδομένα της λίστας {@code data} σε αρχείο PDF. Σε περίπτωση
+     * που η λίστα είναι κενή ή μηδενική, εμφανίζει μήνυμα σφάλματος και 
+     * ακυρώνει τη διαδικασία.
+     * </p>
+     * <p>
+     * Δημιουργείται ένα αρχείο PDF, στο οποίο εισάγεται τίτλος και ένας πίνακας
+     * με τρεις στήλες: αύξων αριθμός, όνομα πανεπιστημίου και αριθμός αναζητήσεων.
+     * Η μέθοδος καταλήγει σε παράθυρο διαλόγου που ενημερώνει για την επιτυχία
+     * της εξαγωγής ή, σε περίπτωση σφάλματος, εμφανίζεται αντίστοιχο μήνυμα.
+     * </p>
+     * 
+     * @throws DocumentException Εάν προκύψει σφάλμα κατά τη δημιουργία ή την επεξεργασία του PDF
+     * @throws IOException Εάν δεν είναι δυνατή η εγγραφή στο αρχείο ή προκύψει άλλο I/O σφάλμα
      */
     public void exportToPdf() throws DocumentException, IOException{
         if (data == null || data.isEmpty()) {
@@ -80,17 +113,17 @@ public class PdfExport {
         PdfPCell headerCell1 = new PdfPCell(new Paragraph("#",
                 FontFactory.getFont(FontFactory.HELVETICA_BOLD,12)));
         headerCell1.setHorizontalAlignment(Element.ALIGN_CENTER);
-        headerCell1.setVerticalAlignment(Element.ALIGN_CENTER);
+        headerCell1.setBackgroundColor(new BaseColor(0xd0,0xed,0xef));
         
         PdfPCell headerCell2 = new PdfPCell(new Paragraph("University Name",
                 FontFactory.getFont(FontFactory.HELVETICA_BOLD,12)));
         headerCell2.setHorizontalAlignment(Element.ALIGN_CENTER);
-        headerCell2.setVerticalAlignment(Element.ALIGN_CENTER);
+        headerCell2.setBackgroundColor(new BaseColor(0xd0,0xed,0xef));
         
         PdfPCell headerCell3 = new PdfPCell(new Paragraph("Number of Searches",
                 FontFactory.getFont(FontFactory.HELVETICA_BOLD,12)));
         headerCell3.setHorizontalAlignment(Element.ALIGN_CENTER);
-        headerCell3.setVerticalAlignment(Element.ALIGN_CENTER);
+        headerCell3.setBackgroundColor(new BaseColor(0xd0,0xed,0xef));
         
         //Προσθήκη κεφαλίδων στον πίνακα
         pdfTable.addCell(headerCell1);
@@ -129,7 +162,9 @@ public class PdfExport {
         document.close();
         
         // Ειδοποίηση για επιτυχή ολοκλήρωση εξαγωγής σε PDF
-        JOptionPane.showMessageDialog(null,"PDF exported successfully as:\n" + filename,
+        System.out.println("PDF exported successfully as:" + 
+                System.getProperty("user.dir") + "\\" + filename);//debugging
+        JOptionPane.showMessageDialog(null,"PDF exported successfully at:\n" + filename,
                     "Export message",JOptionPane.INFORMATION_MESSAGE);
         
     }
